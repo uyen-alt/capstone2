@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:lts_app/screens/add_friends_screen.dart';
+import 'package:lts_app/screens/alert_screen.dart';
+import 'package:lts_app/tab_location_screen.dart';
+
+class HomeContainerWidget extends StatefulWidget {
+  const HomeContainerWidget({Key? key}) : super(key: key);
+
+  @override
+  State<HomeContainerWidget> createState() => HomeContainerWidgetState();
+}
+
+class HomeContainerWidgetState extends State<HomeContainerWidget> {
+  int tabIndex = 0;
+
+  Widget _getBodyWidget(int index) {
+    if (index == 0) {
+      return const TabLocationScreen();
+    } else if (index == 1) {
+      // return QAContent();
+      return const AlertScreen();
+    } else if (index == 2) {
+      return someThing();
+    } else {
+      return someThing();
+    }
+  }
+
+  Widget someThing() {
+    return const Center(
+      child: Text('example'),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SafeArea(
+          child: _getBodyWidget(tabIndex),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          fixedColor: const Color.fromRGBO(106, 0, 191, 1),
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) => setState(
+            () => tabIndex = index,
+          ),
+          currentIndex: tabIndex,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.question_answer), label: 'Messenger'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.shield_sharp), label: 'Alert'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle), label: 'Profile'),
+          ],
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: Visibility(
+          visible: tabIndex == 0,
+          child: FloatingActionButton(
+            backgroundColor: const Color.fromRGBO(106, 0, 191, 1),
+            child: const Icon(Icons.add),
+            onPressed: () {
+              showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                barrierColor: Colors.transparent,
+                backgroundColor: Colors.transparent,
+                builder: (BuildContext context) {
+                  return AddFriendScreen(
+                    height: MediaQuery.of(context).size.height,
+                  );
+                },
+              );
+            },
+          ),
+        ));
+  }
+}
